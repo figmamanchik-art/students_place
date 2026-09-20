@@ -490,8 +490,11 @@ body {
   align-items: center;
   padding: 14px 20px;
   min-width: 110px;
+  width: 130px;                /* ← ДОБАВИТЬ: фиксированная ширина */
+  flex-shrink: 0;              /* ← ДОБАВИТЬ: не сжимается */
   border-right: 2px solid var(--border-color);
   text-align: center;
+  box-sizing: border-box;
 }
 
 .schedule-card-date {
