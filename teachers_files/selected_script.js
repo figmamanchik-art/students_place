@@ -212,19 +212,18 @@
     return result;
   }
 
-  // ===== ЗАГРУЗКА TXT =====
+  // ===== ЗАГРУЗКА TXT (с обходом кэша) =====
   async function loadScheduleFile(fileName) {
-  try {
-    // Добавляем timestamp, чтобы обойти кэш
-    const response = await fetch(fileName + '?t=' + Date.now());
-    if (!response.ok) throw new Error('Файл не найден: ' + fileName);
-    const text = await response.text();
-    return parseScheduleText(text);
-  } catch (err) {
-    console.error('Ошибка загрузки расписания:', err);
-    return {};
+    try {
+      const response = await fetch(fileName + '?t=' + Date.now());
+      if (!response.ok) throw new Error('Файл не найден: ' + fileName);
+      const text = await response.text();
+      return parseScheduleText(text);
+    } catch (err) {
+      console.error('Ошибка загрузки расписания:', err);
+      return {};
+    }
   }
-}
 
   // ===== РЕНДЕР КАРТОЧКИ =====
   function renderCard(item) {
@@ -264,7 +263,7 @@
 
     let html = '';
 
-    // Группы (без автоподсветки — пользователь сам выберет)
+    // Группы
     html += `<div class="schedule-block">`;
     html += `<div class="schedule-label">Группа</div>`;
     html += `<div class="schedule-buttons" id="groupButtons">`;
@@ -277,7 +276,7 @@
     html += `</div>`;
     html += `</div>`;
 
-    // Месяцы (скрыт, пока не выбрана группа)
+    // Месяцы
     html += `<div class="schedule-block" id="monthsBlock" style="display: none;">`;
     html += `<div class="schedule-label">Месяц</div>`;
     html += `<div class="schedule-buttons" id="monthButtons"></div>`;
@@ -305,7 +304,7 @@
     const monthsBlock = document.getElementById('monthsBlock');
     const monthButtons = document.getElementById('monthButtons');
 
-    // Сбрасываем старое состояние
+    // Сбрасываем старое
     currentMonth = null;
     parsedSchedule = {};
     monthButtons.innerHTML = '';
@@ -363,8 +362,8 @@
       btn.addEventListener('click', function() {
         const newIndex = parseInt(this.dataset.groupIndex, 10);
 
-        // Если кликнули по уже активной группе — ничего не делаем
-        if (newIndex === currentGroupIndex && this.classList.contains('active')) {
+        // Если это уже активная группа — игнорируем
+        if (this.classList.contains('active')) {
           return;
         }
 
@@ -374,9 +373,6 @@
         loadGroup(currentGroupIndex);
       });
     });
-
-    // ❌ НЕТ автозагрузки первой группы.
-    // Расписание появится только после клика.
   }
 
   // ===== ЗАГЛУШКА ДЛЯ КОНТЕНТА =====
@@ -384,7 +380,7 @@
     examTitle.textContent = currentTarget === 'oge' ? 'ОГЭ' : 'ЕГЭ';
     examSubtitle.textContent = currentTarget === 'oge' ? 'Основной государственный экзамен' : 'Единый государственный экзамен';
 
-    // Сбрасываем состояние группы при открытии новой категории
+    // Сбрасываем состояние группы при смене категории
     currentGroupIndex = -1;
     currentMonth = null;
     parsedSchedule = {};
@@ -482,13 +478,14 @@
     });
   });
 
-  // ===== ЗАКРЫТИЕ ПРИ КЛИКЕ ВНЕ =====
+  // ===== ЗАКРЫТИЕ ПРИ КЛИКЕ ВНЕ (только допстрока, без сброса currentTarget) =====
   document.addEventListener('click', function(e) {
     const isNav = e.target.closest('.nav-top') || e.target.closest('.nav-sub');
     if (!isNav) {
+      // Закрываем допстроку, но НЕ трогаем currentTarget,
+      // потому что он нужен для расписания (ОГЭ/ЕГЭ)
       navSub.classList.remove('open');
       navLinks.forEach(l => l.classList.remove('active'));
-      currentTarget = null;
     }
   });
 
