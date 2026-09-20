@@ -31,8 +31,6 @@
   const MONTH_ORDER = ['Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь', 'Январь', 'Февраль', 'Март', 'Апрель', 'Май'];
 
   // ===== ДАННЫЕ ГРУПП ПО ЭКЗАМЕНАМ =====
-  // Ключ — themeId
-  // Внутри: 'oge' и 'ege' — каждый со своим массивом групп
   const scheduleData = {
     'Грознов_МД_Информатика': {
       oge: [
@@ -183,7 +181,7 @@
   // ===== ПЕРЕМЕННЫЕ СОСТОЯНИЯ =====
   let currentTarget = null;
   let currentCategory = null;
-  let currentGroupIndex = 0;
+  let currentGroupIndex = -1;
   let currentMonth = null;
   let parsedSchedule = {};
 
@@ -256,8 +254,7 @@
       return `<div class="exam-block"><div class="exam-block-text">Расписание пока недоступно</div></div>`;
     }
 
-    // Берём группы в зависимости от выбранного экзамена (ОГЭ или ЕГЭ)
-    const examType = currentTarget; // 'oge' или 'ege'
+    const examType = currentTarget;
     const groups = data[examType] || [];
 
     if (groups.length === 0) {
@@ -266,13 +263,12 @@
 
     let html = '';
 
-    // Группы
+    // Группы (без автоподсветки — пользователь сам выберет)
     html += `<div class="schedule-block">`;
     html += `<div class="schedule-label">Группа</div>`;
     html += `<div class="schedule-buttons" id="groupButtons">`;
     groups.forEach((group, i) => {
-      const active = i === 0 ? 'active' : '';
-      html += `<button class="schedule-btn ${active}" data-group-index="${i}">
+      html += `<button class="schedule-btn" data-group-index="${i}">
         <span class="schedule-btn-line1">${group.name}</span>
         <span class="schedule-btn-line2">${group.time}</span>
       </button>`;
@@ -280,7 +276,7 @@
     html += `</div>`;
     html += `</div>`;
 
-    // Месяцы
+    // Месяцы (скрыт, пока не выбрана группа)
     html += `<div class="schedule-block" id="monthsBlock" style="display: none;">`;
     html += `<div class="schedule-label">Месяц</div>`;
     html += `<div class="schedule-buttons" id="monthButtons"></div>`;
@@ -288,7 +284,7 @@
 
     // Карточки
     html += `<div class="schedule-cards" id="scheduleContent">
-      <div class="exam-block-text">Выберите группу</div>
+      <div class="exam-block-text">Выберите группу, чтобы увидеть расписание</div>
     </div>`;
 
     return html;
@@ -308,6 +304,12 @@
     const monthsBlock = document.getElementById('monthsBlock');
     const monthButtons = document.getElementById('monthButtons');
 
+    // Сбрасываем старое состояние
+    currentMonth = null;
+    parsedSchedule = {};
+    monthButtons.innerHTML = '';
+    monthsBlock.style.display = 'none';
+
     content.innerHTML = '<div class="exam-block-text">Загрузка...</div>';
 
     parsedSchedule = await loadScheduleFile(group.file);
@@ -316,7 +318,6 @@
 
     if (months.length === 0) {
       content.innerHTML = '<div class="exam-block-text">В файле расписания нет занятий</div>';
-      monthsBlock.style.display = 'none';
       return;
     }
 
@@ -359,22 +360,33 @@
 
     groupButtons.forEach(btn => {
       btn.addEventListener('click', function() {
+        const newIndex = parseInt(this.dataset.groupIndex, 10);
+
+        // Если кликнули по уже активной группе — ничего не делаем
+        if (newIndex === currentGroupIndex && this.classList.contains('active')) {
+          return;
+        }
+
         groupButtons.forEach(b => b.classList.remove('active'));
         this.classList.add('active');
-        currentGroupIndex = parseInt(this.dataset.groupIndex, 10);
+        currentGroupIndex = newIndex;
         loadGroup(currentGroupIndex);
       });
     });
 
-    if (groupButtons.length > 0) {
-      loadGroup(0);
-    }
+    // ❌ НЕТ автозагрузки первой группы.
+    // Расписание появится только после клика.
   }
 
   // ===== ЗАГЛУШКА ДЛЯ КОНТЕНТА =====
   function renderContent(category) {
     examTitle.textContent = currentTarget === 'oge' ? 'ОГЭ' : 'ЕГЭ';
     examSubtitle.textContent = currentTarget === 'oge' ? 'Основной государственный экзамен' : 'Единый государственный экзамен';
+
+    // Сбрасываем состояние группы при открытии новой категории
+    currentGroupIndex = -1;
+    currentMonth = null;
+    parsedSchedule = {};
 
     let html = '';
 
