@@ -214,16 +214,17 @@
 
   // ===== ЗАГРУЗКА TXT =====
   async function loadScheduleFile(fileName) {
-    try {
-      const response = await fetch(fileName);
-      if (!response.ok) throw new Error('Файл не найден: ' + fileName);
-      const text = await response.text();
-      return parseScheduleText(text);
-    } catch (err) {
-      console.error('Ошибка загрузки расписания:', err);
-      return {};
-    }
+  try {
+    // Добавляем timestamp, чтобы обойти кэш
+    const response = await fetch(fileName + '?t=' + Date.now());
+    if (!response.ok) throw new Error('Файл не найден: ' + fileName);
+    const text = await response.text();
+    return parseScheduleText(text);
+  } catch (err) {
+    console.error('Ошибка загрузки расписания:', err);
+    return {};
   }
+}
 
   // ===== РЕНДЕР КАРТОЧКИ =====
   function renderCard(item) {
