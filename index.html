@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Главная • Ученикам</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="card">
+
+  <div class="hero">
+    <h1>Ученикам <span>·</span> пространство</h1>
+    <p>Выбери наставника и предмет</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="selector">
+
+    <div>
+      <div class="row" id="teacherRow">
+        <span class="label">Преподаватель</span>
+        <span class="value">
+          <span id="teacherDisplay">Не выбрано</span>
+          <span class="arrow">▾</span>
+        </span>
+      </div>
+      <div class="options" id="teacherOptions">
+        <div class="option active" data-val="Грознов М.Д.">Грознов М.Д.</div>
+        <div class="option" data-val="Козлов Е.А.">Козлов Е.А.</div>
+        <div class="option" data-val="Покровская В.А.">Покровская В.А.</div>
+	<div class="option" data-val="Перников И.А.">Перников И.А.</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="row" id="subjectRow">
+        <span class="label">Предмет</span>
+        <span class="value">
+          <span id="subjectDisplay">Не выбрано</span>
+          <span class="arrow">▾</span>
+        </span>
+      </div>
+      <div class="options" id="subjectOptions">
+        <div class="option active" data-val="Математика">Математика</div>
+        <div class="option" data-val="Информатика">Информатика</div>
+	<div class="option" data-val="Русский язык">Русский язык</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="result">
+    <span class="label">Ваш выбор</span>
+    <span class="result-value">
+      <span id="resultTeacher">Грознов М.Д.</span> · <span id="resultSubject">Математика</span>
+    </span>
+  </div>
+
+  <a href="#" class="btn" id="goBtn">Погнали</a>
+
+  <div class="footer">
+    <span>✧ кликни чтобы выбрать ✧</span>
+  </div>
+
+</div>
+
+<script src="js/scripts.js"></script>
+</body>
+</html>

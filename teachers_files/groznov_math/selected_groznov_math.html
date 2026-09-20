@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Обучение • Ученикам</title>
+  <link rel="stylesheet" href="../selected_style.css">
+</head>
+<body>
+
+<!-- НАВИГАЦИЯ -->
+<div class="nav-top">
+  <div class="nav-top-inner">
+    <span class="nav-link" data-target="oge">ОГЭ</span>
+    <span class="nav-link" data-target="ege">ЕГЭ</span>
+    <a href="#" class="nav-link plain">Контент</a>
+    <a href="#" class="nav-link plain">Контакты</a>
+  </div>
+</div>
+
+<!-- ДОПОЛНИТЕЛЬНАЯ СТРОКА -->
+<div class="nav-sub" id="navSub">
+  <div class="nav-sub-inner" id="subContent"></div>
+</div>
+
+<!-- ===== ФОКУС ===== -->
+<div class="full-content" id="focusArea">
+
+  <!-- ПРИВЕТСТВИЕ -->
+  <div id="welcomeMessage">
+    <div class="hero">
+      <h1>Привет <span>·</span> ученик</h1>
+      <p>Выбери категорию в меню</p>
+    </div>
+    <div class="divider"></div>
+    <div style="text-align: center; padding: 40px 0; color: #aaaacc; font-size: 18px;">
+      👋 Добро пожаловать!<br>
+      <span style="font-size: 15px; color: #8888bb;">Выбери ОГЭ или ЕГЭ, затем категорию</span>
+    </div>
+  </div>
+
+  <!-- ===== КОНТЕНТ УРОКОВ (ПУСТОЙ) ===== -->
+  <div id="lessonContent" style="display: none;">
+
+    <div class="hero">
+      <h1>Обучение <span>·</span> <span id="selectedSubject">Математика</span></h1>
+      <p>Преподаватель: <span id="selectedTeacher">Грознов М.Д.</span></p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content-grid">
+      <!-- Сюда будет подставляться контент -->
+    </div>
+
+  </div>
+
+  <!-- ===== КОНТЕНТ "ОБ ЭКЗАМЕНЕ" (ПУСТОЙ) ===== -->
+  <div id="examContent" style="display: none;">
+    <div class="hero">
+      <h1><span id="examTitle">ОГЭ</span> <span>·</span> Об экзамене</h1>
+      <p id="examSubtitle">Основной государственный экзамен</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="exam-content" id="examData">
+      <!-- Сюда через JS будет подставляться контент -->
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <span>✦ выбери уровень ✦</span>
+</div>
+
+<script src="../selected_script.js"></script>
+</body>
+</html>
